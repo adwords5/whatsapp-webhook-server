@@ -38,6 +38,7 @@ async function sendTikTokEvent(phoneNumber) {
           },
           properties: {
             source: "WhatsApp"
+                }
           }
         }
       ]
