@@ -22,6 +22,7 @@ async function sendTikTokEvent(phoneNumber) {
     const payload = {
   event_source: "web",               
   event_source_id: TIKTOK_PIXEL_ID, 
+  test_event_code: "TEST49852", 
   data: [
     {
       event: "Lead",
