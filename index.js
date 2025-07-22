@@ -3,8 +3,7 @@ const axios = require('axios');
 const TIKTOK_PIXEL_ID = 'D1VUHO3C77U1VHRJL60G';
 const TIKTOK_ACCESS_TOKEN = '3556595106ee6b3b63807e2dddbb17a2bd673abb';
 
-async function 
-  (phoneNumber) {
+async function sendTikTokEvent(phoneNumber) {
   try {
     const payload = {
       pixel_code: TIKTOK_PIXEL_ID,
