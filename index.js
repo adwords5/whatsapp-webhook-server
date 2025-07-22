@@ -11,15 +11,17 @@ async function sendTikTokEvent(phoneNumber) {
   try {
     console.log('Отправляем токен в TikTok:', TIKTOK_ACCESS_TOKEN);
 
-    const payload = {
+const payload = {
   event: "Contact",
   event_time: Math.floor(Date.now() / 1000),
-  event_source_id: TIKTOK_PIXEL_ID,  // сюда нужно передать ID пикселя (строкой)
+  event_source: "offline",
+  event_source_id: TIKTOK_PIXEL_ID,
   context: {
     phone_number: phoneNumber,
     user_agent: "WhatsAppWebhook/1.0"
   }
 };
+
 
 
     const response = await axios.post(
