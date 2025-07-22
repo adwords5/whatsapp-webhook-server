@@ -15,7 +15,7 @@ async function sendTikTokEvent(phoneNumber) {
 const payload = {
   event: "Lead",
   event_time: Math.floor(Date.now() / 1000),
-  event_source: "pixel",
+  event_source: "web",
   event_source_id: TIKTOK_PIXEL_ID, // рекламный аккаунт TikTok, цифры как строка
     test_event_code: "TEST49852",  // <-- добавляем сюда
   context: {
