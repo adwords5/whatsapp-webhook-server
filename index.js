@@ -9,7 +9,7 @@ app.use(express.json());
 
 async function sendTikTokEvent(phoneNumber) {
   try {
-    console.log('Отправляем токен в TikTok:', TIKTOK_ACCESS_TOKEN); 
+    console.log('Отправляем токен в TikTok:', TIKTOK_ACCESS_TOKEN);
 
     const payload = {
       pixel_code: TIKTOK_PIXEL_ID,
