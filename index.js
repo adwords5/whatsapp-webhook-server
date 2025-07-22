@@ -1,31 +1,32 @@
 const axios = require('axios');
 const express = require('express');
+const crypto = require('crypto');
 const app = express();
 
 const TIKTOK_PIXEL_ID = 'D1VUHO3C77U1VHRJL60G';
 const TIKTOK_ACCESS_TOKEN = '8bbe0d8a1d5af1cd089e088d63f044aed37e8c29';
-const crypto = require('crypto');
 
 function hashSHA256(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
+
 app.use(express.json());
+
 async function sendTikTokEvent(phoneNumber) {
   try {
     const timestamp = Math.floor(Date.now() / 1000);
-
     const hashedPhone = hashSHA256(phoneNumber);
 
     const payload = {
       event_source: "web",
-      event_source_id: TIKTOK_PIXEL_ID,  // ID пикселя
+      event_source_id: TIKTOK_PIXEL_ID,  // ID пикселя как строка
       data: [
         {
           event: "Lead",
           event_time: timestamp,
           user: {
             email: null,
-            phone: hashedPhone,  // телефон в sha256 хэше
+            phone: hashedPhone,  // телефон в sha256
             external_id: null
           },
           properties: {
@@ -57,31 +58,7 @@ async function sendTikTokEvent(phoneNumber) {
   }
 }
 
-
-
-
-
-
-
-    const response = await axios.post(
-  'https://business-api.tiktok.com/open_api/v1.3/event/track/',
-  payload,
-  {
-    headers: {
-      'Access-Token': TIKTOK_ACCESS_TOKEN,
-      'Content-Type': 'application/json'
-    }
-  }
-);
-
-
-    console.log('TikTok event sent:', response.data);
-  } catch (error) {
-    console.error('Ошибка при отправке события в TikTok:', error.response?.data || error.message);
-  }
-}
-
-// ✅ POST-запрос — сюда будут приходить события от WhatsApp
+// POST-запрос — сюда будут приходить события от WhatsApp
 app.post('/webhook', (req, res) => {
   const body = req.body;
 
@@ -107,7 +84,7 @@ app.post('/webhook', (req, res) => {
   }
 });
 
-// ✅ GET-запрос — для верификации Webhook при подключении
+// GET-запрос — для верификации Webhook при подключении
 app.get('/webhook', (req, res) => {
   const VERIFY_TOKEN = 'verify_me_123';
 
