@@ -43,16 +43,6 @@ async function sendTikTokEvent(phoneNumber) {
       ]
     };
 
-
-    // ... дальше твой axios.post и т.д.
-
-  } catch (error) {
-    console.error('Ошибка при отправке события в TikTok:', error.response?.data || error.message);
-  }
-}
-
-
-
     const response = await axios.post(
       'https://business-api.tiktok.com/open_api/v1.3/event/track/',
       payload,
@@ -73,11 +63,9 @@ async function sendTikTokEvent(phoneNumber) {
 // POST-запрос — сюда будут приходить события от WhatsApp
 app.post('/webhook', (req, res) => {
   const body = req.body;
-    console.log('Получено тело webhook:', JSON.stringify(body, null, 2));
-
+  console.log('Получено тело webhook:', JSON.stringify(body, null, 2));
 
   if (body.object && body.entry) {
-    console.log('Получено событие webhook:');
     body.entry.forEach(entry => {
       if (entry.changes) {
         entry.changes.forEach(change => {
@@ -91,7 +79,6 @@ app.post('/webhook', (req, res) => {
         });
       }
     });
-
     res.sendStatus(200);
   } else {
     res.sendStatus(404);
