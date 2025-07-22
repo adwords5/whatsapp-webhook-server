@@ -16,7 +16,7 @@ const payload = {
   event: "Contact",
   event_time: Math.floor(Date.now() / 1000),
   event_source: "offline",
-  event_source_id: "7504628087821221889", // рекламный аккаунт TikTok, цифры как строка
+  event_source_id: "D1VUHO3C77U1VHRJL60G", // рекламный аккаунт TikTok, цифры как строка
     test_event_code: "TEST49852",  // <-- добавляем сюда
   context: {
     pixel_code: TIKTOK_PIXEL_ID, // твой пиксель, строка
