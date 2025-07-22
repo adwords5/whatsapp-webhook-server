@@ -34,15 +34,15 @@ async function sendTikTokEvent(phoneNumber) {
           event_time: timestamp,
           event_id: eventId,
           user: {
-            phone: hashedPhone // хешированный номер
+            phone: hashedPhone
           },
           properties: {
             source: "WhatsApp"
-                }
           }
         }
       ]
     };
+
 
     // ... дальше твой axios.post и т.д.
 
