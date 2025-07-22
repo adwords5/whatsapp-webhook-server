@@ -4,37 +4,60 @@ const app = express();
 
 const TIKTOK_PIXEL_ID = 'D1VUHO3C77U1VHRJL60G';
 const TIKTOK_ACCESS_TOKEN = '8bbe0d8a1d5af1cd089e088d63f044aed37e8c29';
+const crypto = require('crypto');
 
+function hashSHA256(value) {
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
 app.use(express.json());
-
 async function sendTikTokEvent(phoneNumber) {
   try {
-    console.log('Отправляем токен в TikTok:', TIKTOK_ACCESS_TOKEN);
-    console.log('Тип и значение TIKTOK_PIXEL_ID:', typeof TIKTOK_PIXEL_ID, TIKTOK_PIXEL_ID);
+    const timestamp = Math.floor(Date.now() / 1000);
 
-const timestamp = Math.floor(Date.now() / 1000);
+    const hashedPhone = hashSHA256(phoneNumber);
 
-const payload = {
-  pixel_code: TIKTOK_PIXEL_ID,  // строка — ID пикселя
-  event_source: "web",           // допустимое значение: web / app / offline
-  test_event_code: "TEST49852",  // можно убрать на проде
-  data: [
-    {
-      event: "Lead",              // тип события
-      event_time: timestamp,
-      event_id: `wa-msg-${phoneNumber}-${timestamp}`, // уникальный ID события
+    const payload = {
       event_source: "web",
-      user: {
-        phone_number: phoneNumber,
-        user_agent: "WhatsAppWebhook/1.0"
-      },
-      properties: {
-        source: "WhatsApp",
-        step: "message_received"
+      event_source_id: TIKTOK_PIXEL_ID,  // ID пикселя
+      data: [
+        {
+          event: "Lead",
+          event_time: timestamp,
+          user: {
+            email: null,
+            phone: hashedPhone,  // телефон в sha256 хэше
+            external_id: null
+          },
+          properties: {
+            currency: null,
+            content_type: null
+          },
+          page: {
+            url: null,
+            referrer: null
+          }
+        }
+      ]
+    };
+
+    const response = await axios.post(
+      'https://business-api.tiktok.com/open_api/v1.3/event/track/',
+      payload,
+      {
+        headers: {
+          'Access-Token': TIKTOK_ACCESS_TOKEN,
+          'Content-Type': 'application/json'
+        }
       }
-    }
-  ]
-};
+    );
+
+    console.log('TikTok event sent:', response.data);
+  } catch (error) {
+    console.error('Ошибка при отправке события в TikTok:', error.response?.data || error.message);
+  }
+}
+
+
 
 
 
