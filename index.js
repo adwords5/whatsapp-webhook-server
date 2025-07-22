@@ -13,7 +13,7 @@ async function sendTikTokEvent(phoneNumber) {
     console.log('Тип и значение TIKTOK_PIXEL_ID:', typeof TIKTOK_PIXEL_ID, TIKTOK_PIXEL_ID);
 
 const payload = {
-  event: "Contact",
+  event: "pixel",
   event_time: Math.floor(Date.now() / 1000),
   event_source: "offline",
   event_source_id: TIKTOK_PIXEL_ID, // рекламный аккаунт TikTok, цифры как строка
