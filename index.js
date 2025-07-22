@@ -73,6 +73,8 @@ async function sendTikTokEvent(phoneNumber) {
 // POST-запрос — сюда будут приходить события от WhatsApp
 app.post('/webhook', (req, res) => {
   const body = req.body;
+    console.log('Получено тело webhook:', JSON.stringify(body, null, 2));
+
 
   if (body.object && body.entry) {
     console.log('Получено событие webhook:');
