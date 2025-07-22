@@ -5,6 +5,8 @@ const TIKTOK_ACCESS_TOKEN = '8bbe0d8a1d5af1cd089e088d63f044aed37e8c29';
 
 async function sendTikTokEvent(phoneNumber) {
   try {
+    console.log('Отправляем токен в TikTok:', TIKTOK_ACCESS_TOKEN); 
+
     const payload = {
       pixel_code: TIKTOK_PIXEL_ID,
       event: "Contact",
@@ -13,9 +15,15 @@ async function sendTikTokEvent(phoneNumber) {
         phone_number: phoneNumber,
         user_agent: "WhatsAppWebhook/1.0"
       }
-              console.log('Отправляем токен в TikTok:', TIKTOK_ACCESS_TOKEN);
-
     };
+
+    // дальше твой axios.post или другая логика
+
+  } catch (error) {
+    console.error('Ошибка при отправке события в TikTok:', error);
+  }
+}
+
 
     const response = await axios.post(
       'https://business-api.tiktok.com/open_api/v1.3/event/track/',
