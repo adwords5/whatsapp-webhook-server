@@ -16,12 +16,14 @@ const payload = {
   event: "Contact",
   event_time: Math.floor(Date.now() / 1000),
   event_source: "offline",
-  event_source_id: TIKTOK_PIXEL_ID,
+  event_source_id: "7504628087821221889", // рекламный аккаунт TikTok, цифры как строка
   context: {
+    pixel_code: TIKTOK_PIXEL_ID, // твой пиксель, строка
     phone_number: phoneNumber,
     user_agent: "WhatsAppWebhook/1.0"
   }
 };
+
 
 
 
