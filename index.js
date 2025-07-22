@@ -18,25 +18,20 @@ async function sendTikTokEvent(phoneNumber) {
     const hashedPhone = hashSHA256(phoneNumber);
 
     const payload = {
-      event_source: "web",
-      event_source_id: TIKTOK_PIXEL_ID,  // ID пикселя как строка
-      data: [
-        {
-          event: "Lead",
-          event_time: timestamp,
-          user: {
-            email: null,
-            phone: hashedPhone,  // телефон в sha256
-            external_id: null
-          }
-          },
-          page: {
-            url: null,
-            referrer: null
-          }
-        }
-      ]
-    };
+  event_source: "web",               
+  event_source_id: TIKTOK_PIXEL_ID, 
+  data: [
+    {
+      event: "Lead",
+      event_time: Math.floor(Date.now() / 1000),
+      user: {
+        phone: hashedPhone // телефон обязательно должен быть в sha256-хеше
+      }
+      // Можно добавить properties, page, event_id, но не обязательно
+    }
+  ]
+};
+
 
     const response = await axios.post(
       'https://business-api.tiktok.com/open_api/v1.3/event/track/',
