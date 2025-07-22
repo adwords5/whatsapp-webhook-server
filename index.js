@@ -22,15 +22,16 @@ async function sendTikTokEvent(phoneNumber) {
     };
 
     const response = await axios.post(
-      'https://business-api.tiktok.com/open_api/v1.3/event/track/',
-      payload,
-      {
-        headers: {
-          'Authorization': `Bearer ${TIKTOK_ACCESS_TOKEN}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
+  'https://business-api.tiktok.com/open_api/v1.3/event/track/',
+  payload,
+  {
+    headers: {
+      'Access-Token': TIKTOK_ACCESS_TOKEN,
+      'Content-Type': 'application/json'
+    }
+  }
+);
+
 
     console.log('TikTok event sent:', response.data);
   } catch (error) {
