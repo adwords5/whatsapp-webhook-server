@@ -16,6 +16,8 @@ async function sendTikTokEvent(phoneNumber) {
   try {
     const timestamp = Math.floor(Date.now() / 1000);
     const hashedPhone = hashSHA256(phoneNumber);
+    const eventId = `wa-msg-${phoneNumber}-${timestamp}`;
+
 
     const payload = {
   event_source: "web",               
@@ -23,10 +25,13 @@ async function sendTikTokEvent(phoneNumber) {
   data: [
     {
       event: "Lead",
-      event_time: Math.floor(Date.now() / 1000),
+      event_time: timestamp,
+      event_id: eventId,
       user: {
         phone: hashedPhone // телефон обязательно должен быть в sha256-хеше
-      }
+      },
+      properties: {
+        source: "WhatsApp"
       // Можно добавить properties, page, event_id, но не обязательно
     }
   ]
