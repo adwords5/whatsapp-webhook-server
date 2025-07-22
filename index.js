@@ -13,7 +13,8 @@ async function sendTikTokEvent(phoneNumber) {
         phone_number: phoneNumber,
         user_agent: "WhatsAppWebhook/1.0"
       }
-      console.log('Отправляем токен в TikTok:', TIKTOK_ACCESS_TOKEN);
+              console.log('Отправляем токен в TikTok:', TIKTOK_ACCESS_TOKEN);
+
     };
 
     const response = await axios.post(
