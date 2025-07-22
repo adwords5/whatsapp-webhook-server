@@ -15,19 +15,14 @@ app.use(express.json());
 async function sendTikTokEvent(phoneNumber) {
   try {
     const timestamp = Math.floor(Date.now() / 1000);
-
-    // Очищаем номер — оставляем только цифры
     const cleanPhone = phoneNumber.replace(/\D/g, '');
-
-    // Хешируем очищенный номер
     const hashedPhone = hashSHA256(cleanPhone);
-
     const eventId = `wa-msg-${cleanPhone}-${timestamp}`;
 
     const payload = {
       event_source: "web",
       event_source_id: TIKTOK_PIXEL_ID,
-      test_event_code: "TEST49852",
+      test_event_code: "TEST49852", // можно убрать на проде
       data: [
         {
           event: "Lead",
@@ -66,6 +61,7 @@ app.post('/webhook', (req, res) => {
   console.log('Получено тело webhook:', JSON.stringify(body, null, 2));
 
   if (body.object && body.entry) {
+    console.log('Получено событие webhook:');
     body.entry.forEach(entry => {
       if (entry.changes) {
         entry.changes.forEach(change => {
@@ -79,6 +75,7 @@ app.post('/webhook', (req, res) => {
         });
       }
     });
+
     res.sendStatus(200);
   } else {
     res.sendStatus(404);
