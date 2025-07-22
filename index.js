@@ -29,8 +29,7 @@ async function sendTikTokEvent(phoneNumber) {
             phone: hashedPhone,  // телефон в sha256
             external_id: null
           },
-          properties: {
-            currency: null,
+        
           },
           page: {
             url: null,
