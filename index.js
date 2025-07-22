@@ -5,12 +5,33 @@ app.use(express.json());
 
 // ✅ POST-запрос — сюда будут приходить события от WhatsApp
 app.post('/webhook', (req, res) => {
-  console.log('Webhook received:', req.body);
+  const body = req.body;
 
-  // Тут ты будешь отправлять данные в TikTok Events API
+  // Проверяем, что это событие от WhatsApp
+  if (body.object && body.entry) {
+    console.log('Получено событие webhook:');
 
-  res.sendStatus(200);
+    body.entry.forEach(entry => {
+      if (entry.changes) {
+        entry.changes.forEach(change => {
+          const value = change.value;
+          if (value && value.messages) {
+            value.messages.forEach(message => {
+              console.log(`Новое сообщение от ${message.from}: ${message.text?.body || '[нет текста]'}`);
+            });
+          }
+        });
+      }
+    });
+
+    // Отвечаем Meta 200, что приняли webhook
+    res.sendStatus(200);
+  } else {
+    // Неизвестный формат webhook
+    res.sendStatus(404);
+  }
 });
+
 
 // ✅ GET-запрос — Meta использует его для верификации Webhook при подключении
 app.get('/webhook', (req, res) => {
