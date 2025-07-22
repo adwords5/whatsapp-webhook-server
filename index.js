@@ -34,6 +34,7 @@ async function sendTikTokEvent(phoneNumber) {
         source: "WhatsApp"
       // Можно добавить properties, page, event_id, но не обязательно
     }
+        }  
   ]
 };
 
