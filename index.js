@@ -12,18 +12,30 @@ async function sendTikTokEvent(phoneNumber) {
     console.log('Отправляем токен в TikTok:', TIKTOK_ACCESS_TOKEN);
     console.log('Тип и значение TIKTOK_PIXEL_ID:', typeof TIKTOK_PIXEL_ID, TIKTOK_PIXEL_ID);
 
+const timestamp = Math.floor(Date.now() / 1000);
+
 const payload = {
-  event: "Lead",
-  event_time: Math.floor(Date.now() / 1000),
-  event_source: "web",
-  event_source_id: TIKTOK_PIXEL_ID, // рекламный аккаунт TikTok, цифры как строка
-    test_event_code: "TEST49852",  // <-- добавляем сюда
-  context: {
-    pixel_code: TIKTOK_PIXEL_ID, // твой пиксель, строка
-    phone_number: phoneNumber,
-    user_agent: "WhatsAppWebhook/1.0"
-  }
+  pixel_code: TIKTOK_PIXEL_ID,  // строка — ID пикселя
+  event_source: "web",           // допустимое значение: web / app / offline
+  test_event_code: "TEST49852",  // можно убрать на проде
+  data: [
+    {
+      event: "Lead",              // тип события
+      event_time: timestamp,
+      event_id: `wa-msg-${phoneNumber}-${timestamp}`, // уникальный ID события
+      event_source: "web",
+      user: {
+        phone_number: phoneNumber,
+        user_agent: "WhatsAppWebhook/1.0"
+      },
+      properties: {
+        source: "WhatsApp",
+        step: "message_received"
+      }
+    }
+  ]
 };
+
 
 
 
