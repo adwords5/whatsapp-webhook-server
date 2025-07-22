@@ -31,7 +31,6 @@ async function sendTikTokEvent(phoneNumber) {
           },
           properties: {
             currency: null,
-            content_type: null
           },
           page: {
             url: null,
