@@ -15,29 +15,41 @@ app.use(express.json());
 async function sendTikTokEvent(phoneNumber) {
   try {
     const timestamp = Math.floor(Date.now() / 1000);
-    const hashedPhone = hashSHA256(phoneNumber);
-    const eventId = `wa-msg-${phoneNumber}-${timestamp}`;
 
+    // Очищаем номер — оставляем только цифры
+    const cleanPhone = phoneNumber.replace(/\D/g, '');
+
+    // Хешируем очищенный номер
+    const hashedPhone = hashSHA256(cleanPhone);
+
+    const eventId = `wa-msg-${cleanPhone}-${timestamp}`;
 
     const payload = {
-  event_source: "web",               
-  event_source_id: TIKTOK_PIXEL_ID, 
-  test_event_code: "TEST49852", 
-  data: [
-    {
-      event: "Lead",
-      event_time: timestamp,
-      event_id: eventId,
-      user: {
-        phone: hashedPhone // телефон обязательно должен быть в sha256-хеше
-      },
-      properties: {
-        source: "WhatsApp"
-      // Можно добавить properties, page, event_id, но не обязательно
-    }
-        }  
-  ]
-};
+      event_source: "web",
+      event_source_id: TIKTOK_PIXEL_ID,
+      test_event_code: "TEST49852",
+      data: [
+        {
+          event: "Lead",
+          event_time: timestamp,
+          event_id: eventId,
+          user: {
+            phone: hashedPhone // хешированный номер
+          },
+          properties: {
+            source: "WhatsApp"
+          }
+        }
+      ]
+    };
+
+    // ... дальше твой axios.post и т.д.
+
+  } catch (error) {
+    console.error('Ошибка при отправке события в TikTok:', error.response?.data || error.message);
+  }
+}
+
 
 
     const response = await axios.post(
