@@ -1,7 +1,11 @@
 const axios = require('axios');
+const express = require('express');
+const app = express();
 
 const TIKTOK_PIXEL_ID = 'D1VUHO3C77U1VHRJL60G';
 const TIKTOK_ACCESS_TOKEN = '8bbe0d8a1d5af1cd089e088d63f044aed37e8c29';
+
+app.use(express.json());
 
 async function sendTikTokEvent(phoneNumber) {
   try {
@@ -17,14 +21,6 @@ async function sendTikTokEvent(phoneNumber) {
       }
     };
 
-    // дальше твой axios.post или другая логика
-
-  } catch (error) {
-    console.error('Ошибка при отправке события в TikTok:', error);
-  }
-}
-
-
     const response = await axios.post(
       'https://business-api.tiktok.com/open_api/v1.3/event/track/',
       payload,
@@ -38,20 +34,14 @@ async function sendTikTokEvent(phoneNumber) {
 
     console.log('TikTok event sent:', response.data);
   } catch (error) {
-    console.error('Error sending TikTok event:', error.response?.data || error.message);
+    console.error('Ошибка при отправке события в TikTok:', error.response?.data || error.message);
   }
 }
-
-const express = require('express');
-const app = express();
-
-app.use(express.json());
 
 // ✅ POST-запрос — сюда будут приходить события от WhatsApp
 app.post('/webhook', (req, res) => {
   const body = req.body;
 
-  // Проверяем, что это событие от WhatsApp
   if (body.object && body.entry) {
     console.log('Получено событие webhook:');
     body.entry.forEach(entry => {
@@ -61,25 +51,22 @@ app.post('/webhook', (req, res) => {
           if (value && value.messages) {
             value.messages.forEach(message => {
               console.log(`Новое сообщение от ${message.from}: ${message.text?.body || '[нет текста]'}`);
-                            sendTikTokEvent(message.from);
+              sendTikTokEvent(message.from); // отправляем номер в TikTok
             });
           }
         });
       }
     });
 
-    // Отвечаем Meta 200, что приняли webhook
     res.sendStatus(200);
   } else {
-    // Неизвестный формат webhook
     res.sendStatus(404);
   }
 });
 
-
-// ✅ GET-запрос — Meta использует его для верификации Webhook при подключении
+// ✅ GET-запрос — для верификации Webhook при подключении
 app.get('/webhook', (req, res) => {
-  const VERIFY_TOKEN = 'verify_me_123'; // <- Убедись, что этот токен совпадает с тем, что ты введёшь в Meta
+  const VERIFY_TOKEN = 'verify_me_123';
 
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
@@ -93,7 +80,7 @@ app.get('/webhook', (req, res) => {
   }
 });
 
-// Просто проверка, что сервер работает
+// Проверка, что сервер работает
 app.get('/', (req, res) => {
   res.send('Сервер работает!');
 });
